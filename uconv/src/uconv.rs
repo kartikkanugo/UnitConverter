@@ -14,18 +14,21 @@ pub struct Args {
 #[derive(Subcommand, Debug)]
 pub enum Commands {
     /// Calculate velocity and dynamic pressure from MACH
+    #[command(alias = "m")]
     Mach {
         /// MACH value
         #[arg(short, long)]
         value: f64,
     },
     /// Calculate MACH and dynamic pressure from velocity
+    #[command(alias = "v")]
     Vel {
         /// Velocity value in m/s
         #[arg(short, long)]
         value: f64,
     },
     /// Calculate MACH and velocity from dynamic pressure
+    #[command(alias = "d")]
     DynPress {
         /// Dynamic pressure value
         #[arg(short, long)]
@@ -45,9 +48,9 @@ enum Units {
 
 impl From<Option<String>> for Units {
     fn from(opt: Option<String>) -> Self {
-        match opt.as_deref() {
-            Some("PSI") => Units::Psi,
-            Some("Pa") => Units::Pa,
+        match opt {
+            Some(ref s) if s.to_lowercase() == "psi" => Units::Psi,
+            Some(ref s) if s.to_lowercase() == "pa" => Units::Pa,
             _ => Units::NoInp,
         }
     }
